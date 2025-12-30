@@ -4,11 +4,19 @@ import {
   ExecutionContext,
   HttpException,
   HttpStatus,
-  TooManyRequestsException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request, Response } from 'express';
 import { APIJSONRateLimit } from '@/common/decorators/apijson.decorator';
+
+/**
+ * 自定义 TooManyRequestsException
+ */
+class TooManyRequestsException extends HttpException {
+  constructor(message?: string) {
+    super(message || '请求过于频繁', HttpStatus.TOO_MANY_REQUESTS);
+  }
+}
 
 /**
  * APIJSON速率限制守卫
@@ -50,3 +58,4 @@ export class APIJSONRateLimitGuard implements CanActivate {
     return true;
   }
 }
+

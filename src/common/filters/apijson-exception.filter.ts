@@ -153,7 +153,7 @@ export class APIJSONExceptionFilter implements ExceptionFilter {
         return '需要前提条件';
       case HttpStatus.TOO_MANY_REQUESTS:
         return '请求过于频繁';
-      case HttpStatus.REQUEST_HEADER_FIELDS_TOO_LARGE:
+      case 431: // REQUEST_HEADER_FIELDS_TOO_LARGE
         return '请求头字段过大';
       case HttpStatus.INTERNAL_SERVER_ERROR:
         return '服务器内部错误';

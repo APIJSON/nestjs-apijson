@@ -36,7 +36,7 @@ import { JwtModule } from '@nestjs/jwt';
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('jwt.secret', 'default-secret'),
         signOptions: {
-          expiresIn: configService.get<string>('jwt.expiresIn', '1d'),
+          expiresIn: configService.get<string>('jwt.expiresIn', '1d') as any,
         },
         issuer: configService.get<string>('jwt.issuer', 'apijson-server'),
         audience: configService.get<string>('jwt.audience', 'apijson-client'),
