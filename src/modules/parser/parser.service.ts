@@ -4,6 +4,7 @@ import { APIJSONRequest, ParseResult, TableQuery, Directive } from '@/interfaces
 import {
   DirectiveParser,
   DirectiveRegistry,
+  DirectiveRegistryImpl,
   DefaultMethodDirectiveParser,
   DefaultPageDirectiveParser,
   DefaultLimitDirectiveParser,
@@ -43,7 +44,7 @@ export class ParserService {
   private readonly directiveRegistry: DirectiveRegistry;
 
   constructor() {
-    this.directiveRegistry = new DirectiveRegistry();
+    this.directiveRegistry = new DirectiveRegistryImpl();
     this.registerDefaultDirectives();
   }
 
@@ -202,3 +203,4 @@ class DirectiveRegistryImpl implements DirectiveRegistry {
     return Array.from(this.parsers.keys());
   }
 }
+

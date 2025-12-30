@@ -5,6 +5,7 @@ import {
   DirectiveExecutor,
   DirectiveContext,
   DirectiveRegistry,
+  DirectiveRegistryImpl,
   DefaultMethodDirectiveExecutor,
   DefaultPageDirectiveExecutor,
   DefaultLimitDirectiveExecutor,
@@ -46,7 +47,7 @@ export class ExecutorService {
   constructor(
     private readonly databaseService: DatabaseService,
   ) {
-    this.directiveRegistry = new DirectiveRegistry();
+    this.directiveRegistry = new DirectiveRegistryImpl();
     this.registerDefaultDirectives();
   }
 
@@ -182,30 +183,5 @@ export class ExecutorService {
     this.directiveRegistry.register('code', null, new DefaultCodeDirectiveExecutor());
     this.directiveRegistry.register('message', null, new DefaultMessageDirectiveExecutor());
     this.directiveRegistry.register('data', null, new DefaultDataDirectiveExecutor());
-  }
-}
-
-/**
- * 指令注册表实现
- */
-class DirectiveRegistryImpl implements DirectiveRegistry {
-  private readonly executors = new Map<string, DirectiveExecutor>();
-
-  register(name: string, parser: any, executor: DirectiveExecutor): void {
-    if (executor) {
-      this.executors.set(name, executor);
-    }
-  }
-
-  getParser(name: string): any | null {
-    return null;
-  }
-
-  getExecutor(name: string): DirectiveExecutor | null {
-    return this.executors.get(name) || null;
-  }
-
-  getAllNames(): string[] {
-    return Array.from(this.executors.keys());
   }
 }

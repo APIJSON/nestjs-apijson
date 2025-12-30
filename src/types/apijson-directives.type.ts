@@ -657,3 +657,32 @@ export class DefaultDataDirectiveExecutor implements DirectiveExecutor {
     context.logger.debug(`执行数据指令: ${directive.value}`);
   }
 }
+
+/**
+ * 指令注册表实现类
+ */
+export default class DirectiveRegistryImpl implements DirectiveRegistry {
+  private readonly executors = new Map<string, DirectiveExecutor>();
+  private readonly parsers = new Map<string, DirectiveParser>();
+
+  register(name: string, parser: DirectiveParser | null, executor: DirectiveExecutor | null): void {
+    if (parser) {
+      this.parsers.set(name, parser);
+    }
+    if (executor) {
+      this.executors.set(name, executor);
+    }
+  }
+
+  getParser(name: string): DirectiveParser | null {
+    return this.parsers.get(name) || null;
+  }
+
+  getExecutor(name: string): DirectiveExecutor | null {
+    return this.executors.get(name) || null;
+  }
+
+  getAllNames(): string[] {
+    return Array.from(new Set([...this.parsers.keys(), ...this.executors.keys()]));
+  }
+}
