@@ -177,7 +177,7 @@ export class ParserService {
 /**
  * 指令注册表实现
  */
-class DirectiveRegistryImpl implements DirectiveRegistry {
+class DirectiveRegistryImpl2 implements DirectiveRegistry {
   private readonly parsers = new Map<string, any>();
   private readonly executors = new Map<string, any>();
 

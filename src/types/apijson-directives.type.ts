@@ -661,7 +661,7 @@ export class DefaultDataDirectiveExecutor implements DirectiveExecutor {
 /**
  * 指令注册表实现类
  */
-export default class DirectiveRegistryImpl implements DirectiveRegistry {
+export class DirectiveRegistryImpl implements DirectiveRegistry {
   private readonly executors = new Map<string, DirectiveExecutor>();
   private readonly parsers = new Map<string, DirectiveParser>();
 
