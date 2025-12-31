@@ -12,12 +12,7 @@ export class CacheService {
   private readonly config: CacheConfig;
 
   constructor(private readonly configService: ConfigService) {
-    this.config = this.configService.get<CacheConfig>('cache') /* || {
-      type: 'memory',
-      maxSize: 1000,
-      defaultTTL: 300000, // 5分钟
-      keyPrefix: 'apijson:',
-    }; */
+    this.config = this.configService.get<CacheConfig>('cache')
 
     // 启动清理任务
     this.startCleanupTask();

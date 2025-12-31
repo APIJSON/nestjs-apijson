@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
-import configuration, { databaseConfig } from '@/config/configuration';
+import configuration, { cacheConfig, databaseConfig } from '@/config/configuration';
 import { APIJSONController } from '@/controllers/apijson.controller';
 import { HealthController } from '@/controllers/health.controller';
 import { ParserModule } from '@/modules/parser/parser.module';
@@ -32,6 +32,11 @@ import { JwtModule } from '@nestjs/jwt';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],
+      envFilePath: ['.env.local', '.env'],
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [cacheConfig],
       envFilePath: ['.env.local', '.env'],
     }),
 

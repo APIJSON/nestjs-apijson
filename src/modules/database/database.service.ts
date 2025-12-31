@@ -23,6 +23,7 @@ export class DatabaseService {
    */
   async query(sql: string, params: any[] = []): Promise<any> {
     this.logger.debug(`执行查询: ${sql}, 参数: ${JSON.stringify(params)}`);
+	  console.log('this.config = ', this.config);
 
     try {
       // 根据数据库类型执行查询
