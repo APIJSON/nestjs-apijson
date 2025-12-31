@@ -76,6 +76,7 @@ export class VerifierService {
       valid = false;
     }
 
+	  console.log('tableQuery.columns = ', tableQuery.columns);
     // 验证列
     if (tableQuery.columns !== undefined) {
       const columnErrors = await this.verifyColumns(tableQuery.columns);
@@ -211,6 +212,7 @@ export class VerifierService {
    * 验证列
    */
   private async verifyColumns(columns: any): Promise<string[]> {
+	  console.log('columns = ', columns);
     const errors: string[] = [];
 
     // 检查是否为数组或字符串
@@ -226,6 +228,7 @@ export class VerifierService {
 
     // 验证每个列
     for (const column of columns) {
+	    console.log('column = ', column);
       if (typeof column !== 'string') {
         errors.push(`列 "${column}" 必须为字符串`);
         continue;

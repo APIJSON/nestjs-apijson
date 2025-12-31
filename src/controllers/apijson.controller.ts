@@ -65,16 +65,17 @@ export class APIJSONController {
     const cacheKey = this.generateCacheKey(request);
 
     // 检查缓存
-    const cachedResponse = await this.cacheService.get(cacheKey);
+    /* const cachedResponse = await this.cacheService.get(cacheKey);
     if (cachedResponse) {
       return {
         ...cachedResponse,
         cached: true,
       };
-    }
+    } */
 
     // 解析请求
     const parseResult = await this.parserService.parse(request);
+	  console.log('parseResult = ', parseResult.tables);
 
     // 验证请求
     const verifyResult = await this.verifierService.verify(parseResult);
