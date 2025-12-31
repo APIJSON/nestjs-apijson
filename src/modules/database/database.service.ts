@@ -12,16 +12,7 @@ export class DatabaseService {
   private connection: { type: string; config: DatabaseConfig } | null = null;
 
   constructor(private readonly configService: ConfigService) {
-    this.config = this.configService.get<DatabaseConfig>('database')/*  || {
-      type: 'sqlite',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'apijson',
-      synchronize: false,
-      logging: false,
-    }; */
+    this.config = this.configService.get<DatabaseConfig>('database')
 
     // 初始化数据库连接
     this.initializeConnection();

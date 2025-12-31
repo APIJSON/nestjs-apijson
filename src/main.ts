@@ -42,7 +42,7 @@ async function bootstrap() {
     app.setGlobalPrefix(globalPrefix);
 
     // 配置Swagger文档
-    if (configService.get<boolean>('swagger.enabled', true)) {
+    if (configService.get<boolean>('swagger.enabled', true) || true) {
       const options = new DocumentBuilder()
         .setTitle(configService.get<string>('swagger.title', 'APIJSON Server API'))
         .setDescription(configService.get<string>('swagger.description', '基于 NestJS 的 APIJSON 服务器实现'))
@@ -70,13 +70,16 @@ async function bootstrap() {
       );
 
       logger.log(`Swagger文档已启用: /${globalPrefix}/${configService.get<string>('swagger.path', 'docs')}`);
+      console.log(`Swagger文档已启用: /${globalPrefix}/${configService.get<string>('swagger.path', 'docs')}`);
     }
 
     // 启动应用
-    const port = configService.get<number>('app.port', 3000);
+    const port = configService.get<number>('app.port', 5500);
     const host = configService.get<string>('app.host', '0.0.0.0');
 
-    await app.listen(port, host);
+    await app.listen(port, host, ()=>{
+	    console.log(`http://127.0.0.1:${port}`);
+    });
 
     logger.log(`应用程序已启动: http://${host}:${port}/${globalPrefix}`);
     logger.log(`环境: ${configService.get<string>('app.environment', 'development')}`);
