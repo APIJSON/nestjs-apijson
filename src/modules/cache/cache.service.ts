@@ -13,7 +13,7 @@ export class CacheService {
 
   constructor(private readonly configService: ConfigService) {
     this.config = this.configService.get<CacheConfig>('cache')
-
+    
     // 启动清理任务
     this.startCleanupTask();
   }

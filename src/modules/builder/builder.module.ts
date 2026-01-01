@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
 import { BuilderService } from './builder.service';
-import { BuilderController } from './builder.controller';
+import { MySQLBuilderService } from './mysql-builder.service';
 
 /**
  * 构建器模块
+ * 负责将解析结果转换为 SQL 查询
  */
 @Module({
-  controllers: [BuilderController],
-  providers: [BuilderService],
-  exports: [BuilderService],
+  providers: [
+    BuilderService,
+    MySQLBuilderService,
+  ],
+  exports: [
+    BuilderService,
+    MySQLBuilderService,
+  ],
 })
 export class BuilderModule {}

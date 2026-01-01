@@ -1,13 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ParserService } from './parser.service';
-import { ParserController } from './parser.controller';
+import { CoreParserService } from './core-parser.service';
 
 /**
  * 解析器模块
+ * 负责解析 APIJSON 请求
  */
 @Module({
-  controllers: [ParserController],
-  providers: [ParserService],
-  exports: [ParserService],
+  providers: [
+    ParserService,
+    CoreParserService,
+  ],
+  exports: [
+    ParserService,
+    CoreParserService,
+  ],
 })
 export class ParserModule {}

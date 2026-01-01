@@ -17,6 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    // 使用 Node.js 风格的模块解析
+    "moduleResolution": "node",
+    // 启用与 ES 模块的互操作性
+    "esModuleInterop": true,
     "paths": {
       "@/*": [
         "src/*"

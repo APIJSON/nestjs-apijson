@@ -65,6 +65,7 @@ export interface ExecuteResult {
  */
 export interface TableQuery {
   name: string;
+  operation?: string;
   columns: any[];
   where: any;
   joins: any[];
@@ -73,6 +74,14 @@ export interface TableQuery {
   order: any[];
   limit: number;
   offset: number;
+  isArray?: boolean;
+  data?: any;
+  query?: any;
+  cache?: any;
+  role?: string;
+  database?: string;
+  schema?: string;
+  explain?: boolean;
 }
 
 /**
@@ -88,6 +97,7 @@ export interface Directive {
  */
 export interface Query {
   table: string;
+  operation?: string;
   type: string;
   columns: any[];
   where: any;
@@ -99,6 +109,8 @@ export interface Query {
   offset: number;
   sql: string;
   params: any[];
+  query?: any;
+  data?: any;
 }
 
 /**

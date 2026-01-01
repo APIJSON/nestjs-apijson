@@ -1,103 +1,73 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
-import configuration, { cacheConfig, databaseConfig } from '@/config/configuration';
-import { APIJSONController } from '@/controllers/apijson.controller';
-import { HealthController } from '@/controllers/health.controller';
-import { ParserModule } from '@/modules/parser/parser.module';
-import { BuilderModule } from '@/modules/builder/builder.module';
-import { VerifierModule } from '@/modules/verifier/verifier.module';
-import { ExecutorModule } from '@/modules/executor/executor.module';
-import { CacheModule } from '@/modules/cache/cache.module';
-import { DatabaseModule } from '@/modules/database/database.module';
-import { APIJSONInterceptor } from '@/common/interceptors/apijson.interceptor';
-import { LoggingInterceptor } from '@/common/interceptors/logging.interceptor';
-import { APIJSONExceptionFilter } from '@/common/filters/apijson-exception.filter';
-import { APIJSONValidationPipe } from '@/common/pipes/apijson-validation.pipe';
-import { APIJSONAuthGuard } from '@/common/guards/apijson-auth.guard';
-import { APIJSONRateLimitGuard } from '@/common/guards/apijson-rate-limit.guard';
+import { Module, Scope } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import configuration from './config/configuration';
+import { databaseConfig, jwtConfig, cacheConfig } from './config/configuration';
+import { DatabaseModule } from './modules/database/database.module';
+import { CacheModule } from './modules/cache/cache.module';
+import { ParserModule } from './modules/parser/parser.module';
+import { VerifierModule } from './modules/verifier/verifier.module';
+import { BuilderModule } from './modules/builder/builder.module';
+import { ExecutorModule } from './modules/executor/executor.module';
+import { PermissionModule } from './modules/permission/permission.module';
+import { AdvancedModule } from './modules/advanced/advanced.module';
+import { APIJSONRequestController } from './controllers/apijson-request.controller';
+import { HealthController } from './controllers/health.controller';
+import { TestDatabaseController } from './controllers/test-database.controller';
+import { APIJSONExceptionFilter } from './common/filters/apijson-exception.filter';
 
 /**
- * 应用模块
+ * 应用主模块
+ * 导入所有功能模块
  */
 @Module({
   imports: [
     // 配置模块
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration],
-      envFilePath: ['.env.local', '.env'],
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [databaseConfig],
-      envFilePath: ['.env.local', '.env'],
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [cacheConfig],
-      envFilePath: ['.env.local', '.env'],
+      load: [
+        configuration,
+        databaseConfig,
+        jwtConfig,
+        cacheConfig,
+      ],
     }),
 
     // JWT模块
     JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('jwt.secret', 'default-secret'),
+      useFactory: (config) => ({
+        secret: config.secret,
         signOptions: {
-          expiresIn: configService.get<string>('jwt.expiresIn', '1d') as any,
+          expiresIn: config.expiresIn,
+          issuer: config.issuer,
+          audience: config.audience,
         },
-        issuer: configService.get<string>('jwt.issuer', 'apijson-server'),
-        audience: configService.get<string>('jwt.audience', 'apijson-client'),
       }),
-      inject: [ConfigService],
+      inject: [jwtConfig.KEY],
+      global: true,
     }),
 
-    // 业务模块
-    ParserModule,
-    BuilderModule,
-    VerifierModule,
-    ExecutorModule,
-    CacheModule,
+    // 功能模块
     DatabaseModule,
+    CacheModule,
+    ParserModule,
+    VerifierModule,
+    BuilderModule,
+    ExecutorModule,
+    PermissionModule,
+    AdvancedModule,
   ],
   controllers: [
-    // 控制器
-    APIJSONController,
+    APIJSONRequestController,
     HealthController,
+    TestDatabaseController,
   ],
   providers: [
-    // 全局拦截器
+    // 全局异常过滤器
     {
-      provide: APP_INTERCEPTOR,
-      useClass: APIJSONInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
-
-    // 全局过滤器
-    {
-      provide: APP_FILTER,
+      provide: 'APP_FILTER',
       useClass: APIJSONExceptionFilter,
-    },
-
-    // 全局管道
-    {
-      provide: APP_PIPE,
-      useClass: APIJSONValidationPipe,
-    },
-
-    // 全局守卫
-    {
-      provide: APP_GUARD,
-      useClass: APIJSONRateLimitGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: APIJSONAuthGuard,
+      scope: Scope.REQUEST,
     },
   ],
 })

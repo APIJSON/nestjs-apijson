@@ -1,15 +1,22 @@
-import { Module } from '@nestjs/common';
-import { ExecutorService } from './executor.service';
-import { ExecutorController } from './executor.controller';
-import { DatabaseModule } from '../database/database.module';
+import {Module} from '@nestjs/common';
+import {ExecutorService} from './executor.service';
+import {MySQLExecutorService} from './mysql-executor.service';
+import {DatabaseService} from "@/modules/database/database.service";
 
 /**
  * 执行器模块
+ * 负责执行 SQL 查询并处理结果
  */
 @Module({
-  imports: [DatabaseModule],
-  controllers: [ExecutorController],
-  providers: [ExecutorService],
-  exports: [ExecutorService],
+    providers: [
+        ExecutorService,
+        MySQLExecutorService,
+        DatabaseService
+    ],
+    exports: [
+        ExecutorService,
+        MySQLExecutorService,
+    ],
 })
-export class ExecutorModule {}
+export class ExecutorModule {
+}
